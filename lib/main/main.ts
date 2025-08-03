@@ -7,7 +7,9 @@ import { createAppWindow } from './app'
 // Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   // Set app user model id for windows
-  electronApp.setAppUserModelId('com.electron')
+  electronApp.setAppUserModelId('com.tempest')
+  // Set app name
+  app.setName('Tempest')
   // Create app window
   createAppWindow()
 
