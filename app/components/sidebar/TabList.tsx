@@ -17,7 +17,7 @@ interface TablistProps {
 const tabs: Tab[] = [
   {
     id: '1',
-    title: 'Arc Browser - The Browser Company',
+    title: 'Google',
     icon: Globe,
     color: 'bg-blue-600',
     isActive: true,
@@ -90,10 +90,12 @@ export function Tablist({ sidebarWidth }: TablistProps) {
               </div>
               {sidebarWidth > 140 && (
                 <>
-                  <span className="text-sm flex-1 truncate">{tab.title}</span>
-                  <Button variant="ghost" size="sm" className={`h-4 w-4 p-0 ${
-                    tab.isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
-                  }`}>
+                  <span className="text-sm flex-1 truncate text-gray-900">{tab.title}</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className={`h-4 w-4 p-0 ${tab.isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                  >
                     <X className="h-3 w-3" />
                   </Button>
                 </>

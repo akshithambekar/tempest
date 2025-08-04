@@ -8,7 +8,15 @@ import { Navbar } from './Navbar'
 import { Searchbar } from './Searchbar'
 import { Tablist } from './TabList'
 
-export function Sidebar() {
+interface SidebarProps {
+  onNavigate: (url: string) => void
+  onGoBack: () => void
+  onGoForward: () => void
+  canGoBack: boolean
+  canGoForward: boolean
+}
+
+export function Sidebar({ onNavigate, onGoBack, onGoForward, canGoBack, canGoForward }: SidebarProps) {
   const [sidebarWidth, setSidebarWidth] = useState(320)
   const [isResizing, setIsResizing] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
@@ -23,7 +31,7 @@ export function Sidebar() {
       if (!isResizing) return
 
       const newWidth = e.clientX
-      const minWidth = 100
+      const minWidth = 200
       const maxWidth = 500
 
       if (newWidth >= minWidth && newWidth <= maxWidth) {
@@ -57,10 +65,16 @@ export function Sidebar() {
       style={{ width: `${sidebarWidth}px` }}
     >
       {/* Navbar */}
-      <Navbar sidebarWidth={sidebarWidth} />
+      <Navbar
+        sidebarWidth={sidebarWidth}
+        onGoBack={onGoBack}
+        onGoForward={onGoForward}
+        canGoBack={canGoBack}
+        canGoForward={canGoForward}
+      />
 
       {/* Searchbar */}
-      <Searchbar sidebarWidth={sidebarWidth} />
+      <Searchbar sidebarWidth={sidebarWidth} onNavigate={onNavigate} />
 
       {/* Tablist */}
       <Tablist sidebarWidth={sidebarWidth} />
@@ -90,10 +104,8 @@ export function Sidebar() {
         onMouseDown={handleMouseDown}
       >
         {/* Visual Notch Indicator */}
-        <div className="absolute top-1/2 right-1 transform -translate-y-1/2">
-          <div className="w-1 h-8 bg-gray-300 rounded-full opacity-60 group-hover:opacity-100 group-hover:bg-blue-500 transition-all flex items-center justify-center">
-            <div className="w-0.5 h-4 bg-gray-400 group-hover:bg-blue-600 rounded-full"></div>
-          </div>
+        <div className="absolute top-1/2 left-0 right-0 transform -translate-y-1/2 flex justify-center">
+          <div className="w-1 h-8 bg-gray-300 rounded-full opacity-60 group-hover:opacity-100 group-hover:bg-blue-500 transition-all"></div>
         </div>
       </div>
     </div>
