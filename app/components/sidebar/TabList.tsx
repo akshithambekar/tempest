@@ -1,7 +1,6 @@
 import type React from 'react'
 import { useState } from 'react'
 import { Button } from '@/app/components/ui/button'
-import { useState } from 'react'
 import { X, Globe, Github, Twitter, Youtube, FileText, Calendar, Home, Mail, Figma } from 'lucide-react'
 
 interface Tab {
@@ -22,7 +21,6 @@ const tabs: Tab[] = [
     title: 'Google',
     icon: Globe,
     color: 'bg-blue-600',
-    isActive: true,
   },
   {
     id: '2',
