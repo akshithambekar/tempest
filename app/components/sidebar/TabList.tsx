@@ -1,7 +1,7 @@
 import type React from 'react'
 import { useState } from 'react'
 import { Button } from '@/app/components/ui/button'
-import { X, Globe, Github, Twitter, Youtube, FileText, Calendar, Home, Mail, Figma, User } from 'lucide-react'
+import { X, Globe, Github, Twitter, Youtube, FileText, Calendar, Home, Mail, Figma } from 'lucide-react'
 
 interface Tab {
   id: string
@@ -9,10 +9,6 @@ interface Tab {
   icon: React.ComponentType<{ className?: string }>
   color: string
   isActive?: boolean
-  userInfo?: {
-    name?: string
-    email?: string
-  }
 }
 
 interface TablistProps {
@@ -25,6 +21,7 @@ const tabs: Tab[] = [
     title: 'Google',
     icon: Globe,
     color: 'bg-blue-600',
+    isActive: true,
   },
   {
     id: '2',
