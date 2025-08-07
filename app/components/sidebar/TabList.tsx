@@ -1,6 +1,7 @@
 import type React from 'react'
+import { useState } from 'react'
 import { Button } from '@/app/components/ui/button'
-import { X, Globe, Github, Twitter, Youtube, FileText, Calendar, Home, Mail, Figma } from 'lucide-react'
+import { X, Globe, Github, Twitter, Youtube, FileText, Calendar, Home, Mail, Figma, User } from 'lucide-react'
 
 interface Tab {
   id: string
@@ -8,6 +9,10 @@ interface Tab {
   icon: React.ComponentType<{ className?: string }>
   color: string
   isActive?: boolean
+  userInfo?: {
+    name?: string
+    email?: string
+  }
 }
 
 interface TablistProps {
@@ -20,7 +25,6 @@ const tabs: Tab[] = [
     title: 'Google',
     icon: Globe,
     color: 'bg-blue-600',
-    isActive: true,
   },
   {
     id: '2',
@@ -73,16 +77,39 @@ const tabs: Tab[] = [
 ]
 
 export function Tablist({ sidebarWidth }: TablistProps) {
+  const [activeTabs, setActiveTabs] = useState<string[]>(['1'])
+  const [activeTabId, setActiveTabId] = useState('1')
+
+  const handleTabClick = (tabId: string) => {
+    setActiveTabId(tabId)
+    if (!activeTabs.includes(tabId)) {
+      setActiveTabs([...activeTabs, tabId])
+    }
+  }
+
+  const handleTabClose = (tabId: string, e: React.MouseEvent) => {
+    e.stopPropagation()
+    setActiveTabs(activeTabs.filter(id => id !== tabId))
+    if (activeTabId === tabId && activeTabs.length > 1) {
+      const newActiveTab = activeTabs.find(id => id !== tabId)
+      if (newActiveTab) setActiveTabId(newActiveTab)
+    }
+  }
+
   return (
     <div className="flex-1 px-4 py-3 overflow-y-auto">
       <div className="space-y-1">
         {tabs.map((tab) => {
           const IconComponent = tab.icon
+          const isActive = activeTabId === tab.id
+          const isOpen = activeTabs.includes(tab.id)
+          
           return (
             <div
               key={tab.id}
-              className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer group ${
-                tab.isActive ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-100'
+              onClick={() => handleTabClick(tab.id)}
+              className={`flex items-center gap-2 p-2 rounded-lg cursor-pointer group transition-colors ${
+                isActive ? 'bg-blue-50 border border-blue-200' : 'hover:bg-gray-100'
               }`}
             >
               <div className={`w-4 h-4 ${tab.color} rounded flex items-center justify-center`}>
@@ -91,13 +118,16 @@ export function Tablist({ sidebarWidth }: TablistProps) {
               {sidebarWidth > 140 && (
                 <>
                   <span className="text-sm flex-1 truncate text-gray-900">{tab.title}</span>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className={`h-4 w-4 p-0 ${tab.isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
-                  >
-                    <X className="h-3 w-3" />
-                  </Button>
+                  {isOpen && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={(e) => handleTabClose(tab.id, e)}
+                      className={`h-4 w-4 p-0 ${isActive ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'}`}
+                    >
+                      <X className="h-3 w-3" />
+                    </Button>
+                  )}
                 </>
               )}
             </div>
