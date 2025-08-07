@@ -32,7 +32,7 @@ export function Sidebar({ onNavigate, onGoBack, onGoForward, canGoBack, canGoFor
 
       const newWidth = e.clientX
       const minWidth = 200
-      const maxWidth = 500
+      const maxWidth = Math.min(500, window.innerWidth / 3)
 
       if (newWidth >= minWidth && newWidth <= maxWidth) {
         setSidebarWidth(newWidth)
@@ -57,6 +57,21 @@ export function Sidebar({ onNavigate, onGoBack, onGoForward, canGoBack, canGoFor
       }
     }
   }, [isResizing, handleMouseMove, handleMouseUp])
+
+  // Handle window resize and initial width check
+  useEffect(() => {
+    const handleWindowResize = () => {
+      const maxAllowedWidth = window.innerWidth / 3
+      if (sidebarWidth > maxAllowedWidth) {
+        setSidebarWidth(Math.max(200, maxAllowedWidth))
+      }
+    }
+
+    handleWindowResize()
+
+    window.addEventListener('resize', handleWindowResize)
+    return () => window.removeEventListener('resize', handleWindowResize)
+  }, [sidebarWidth])
 
   return (
     <div
