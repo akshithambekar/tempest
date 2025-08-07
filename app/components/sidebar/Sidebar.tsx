@@ -8,15 +8,27 @@ import { Navbar } from './Navbar'
 import { Searchbar } from './Searchbar'
 import { Tablist } from './TabList'
 
+interface Tab {
+  id: string
+  url: string
+  title: string
+}
+
 interface SidebarProps {
   onNavigate: (url: string) => void
   onGoBack: () => void
   onGoForward: () => void
   canGoBack: boolean
   canGoForward: boolean
+  currentUrl?: string
+  tabs: Tab[]
+  activeTabId: string | null
+  onTabSwitch: (tabId: string) => void
+  onTabClose: (tabId: string) => void
+  onNewTab: () => void
 }
 
-export function Sidebar({ onNavigate, onGoBack, onGoForward, canGoBack, canGoForward }: SidebarProps) {
+export function Sidebar({ onNavigate, onGoBack, onGoForward, canGoBack, canGoForward, currentUrl, tabs, activeTabId, onTabSwitch, onTabClose, onNewTab }: SidebarProps) {
   const [sidebarWidth, setSidebarWidth] = useState(320)
   const [isResizing, setIsResizing] = useState(false)
   const sidebarRef = useRef<HTMLDivElement>(null)
@@ -89,15 +101,25 @@ export function Sidebar({ onNavigate, onGoBack, onGoForward, canGoBack, canGoFor
       />
 
       {/* Searchbar */}
-      <Searchbar sidebarWidth={sidebarWidth} onNavigate={onNavigate} />
+      <Searchbar 
+        sidebarWidth={sidebarWidth} 
+        onNavigate={onNavigate}
+        hasActiveTab={activeTabId !== null}
+      />
 
       {/* Tablist */}
-      <Tablist sidebarWidth={sidebarWidth} />
+      <Tablist 
+        sidebarWidth={sidebarWidth} 
+        tabs={tabs}
+        activeTabId={activeTabId}
+        onTabClick={onTabSwitch}
+        onTabClose={onTabClose}
+      />
 
       {/* Bottom Actions */}
       <div className="p-4 border-t border-gray-100">
         <div className="flex items-center justify-between">
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={onNewTab}>
             <Plus className="h-4 w-4" />
           </Button>
           {sidebarWidth > 150 && (
